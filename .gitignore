@@ -1,0 +1,23 @@
+build
+dist / media
+node_modules
+.DS_Store
+.env
+.next
+.vercel
+
+
+
+public/robots.txt
+public/sitemap*.xml
+
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat

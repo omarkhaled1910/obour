@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  payload:
+    image: node:22-alpine
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    working_dir: /home/node/app/
+    command: sh -c "corepack enable pnpm && pnpm install --ignore-scripts && pnpm dev"
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/news_24
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  node_modules:
