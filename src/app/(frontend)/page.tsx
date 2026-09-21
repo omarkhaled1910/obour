@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Scale, PencilRuler, HardHat, HandCoins } from "lucide-react";
 import { MapPlaceholder } from "@/components/MapPlaceholder";
+import { getServerSideURL } from "@/utilities/getURL";
+import { createPageMetadata, SITE_NAME } from "@/utilities/seo";
 
 const OPTIONS = [
   {
@@ -29,9 +32,44 @@ const OPTIONS = [
   },
 ];
 
+export const metadata: Metadata = createPageMetadata({
+  title: "خدمات ملاك مدينة العبور الجديدة",
+  description:
+    "ابدأ رحلة تقنين أرضك في مدينة العبور الجديدة، واطلب الرسومات والتراخيص أو تنفيذ المباني أو شريكًا ممولًا من مكان واحد.",
+  path: "/",
+  keywords: ["خدمات ملاك الأراضي", "تقنين الملكية", "البناء في العبور الجديدة"],
+});
+
 export default function Home() {
+  const url = getServerSideURL();
+  const servicesJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `خدمات ${SITE_NAME}`,
+    itemListElement: OPTIONS.map((option, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "Service",
+        name: option.title,
+        description: option.description,
+        url: `${url}${option.href}`,
+        areaServed: "مدينة العبور الجديدة",
+        provider: {
+          "@id": `${url}/#organization`,
+        },
+      },
+    })),
+  };
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(servicesJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <section className="relative bg-gradient-to-b from-emerald-950 to-emerald-900 text-white">
         <div className="mx-auto max-w-3xl px-4 pt-20 pb-20 text-center">
           <div className="text-lg sm:text-xl font-bold mb-4">منصة ملاك مدينة العبور الجديدة</div>

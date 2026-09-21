@@ -5,6 +5,7 @@ declare global {
       NEXT_PRIVATE_DATABASE_URL: string
       NEXT_PUBLIC_SERVER_URL: string
       VERCEL_PROJECT_PRODUCTION_URL?: string
+      GOOGLE_SITE_VERIFICATION?: string
       CRON_SECRET?: string
       NEXT_PUBLIC_SUPABASE_URL?: string
       NEXT_PRIVATE_SUPABASE_STORAGE_BUCKET_NAME?: string
