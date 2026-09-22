@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
-import { MapPlaceholder } from "@/components/MapPlaceholder";
 import {
   submitOwnershipRegistration,
   uploadFilesAction,
@@ -32,11 +31,11 @@ const COOPERATIVES: { name: Cooperative }[] = [
 // تقريبية بصريًا مش حدودًا مساحية دقيقة. الجمعيات اللي مش ظاهرة في الخريطة الحالية
 // (مصر التعاونية، اتحاد الوفاق) بيتم اختيارها من قائمة الأسماء تحت بس.
 const MAP_HOTSPOTS: Partial<Record<Cooperative, { left: number; top: number; width: number; height: number }>> = {
-  "أحمد عرابي": { left: 20, top: 30, width: 34, height: 48 },
-  "الطلائع": { left: 50, top: 32, width: 22, height: 18 },
-  "القادسية": { left: 67, top: 50, width: 15, height: 10 },
-  "مصر الجديدة": { left: 65, top: 58, width: 17, height: 11 },
-  "الأمل": { left: 47, top: 50, width: 21, height: 30 },
+  "أحمد عرابي": { left: 26, top: 38, width: 30, height: 42 },
+  "الطلائع": { left: 52, top: 44, width: 20, height: 14 },
+  "القادسية": { left: 67, top: 52, width: 17, height: 10 },
+  "مصر الجديدة": { left: 65, top: 60, width: 19, height: 13 },
+  "الأمل": { left: 52, top: 60, width: 20, height: 20 },
 };
 
 type AreaUnit = "feddan" | "meter";
@@ -260,10 +259,15 @@ export default function RegisterPage() {
         {step === "cooperative" && (
           <div>
             <div className="relative rounded-xl overflow-hidden border border-stone-200 mb-6">
-              <MapPlaceholder
-                label="خريطة جمعيات مدينة العبور"
-                className="aspect-[3/2] w-full"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/city-map-before.jpg"
+                alt="خريطة جمعيات مدينة العبور"
+                className="w-full h-auto block"
               />
+              <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
+                قبل
+              </span>
               {COOPERATIVES.map((c) => {
                 const spot = MAP_HOTSPOTS[c.name];
                 if (!spot) return null;

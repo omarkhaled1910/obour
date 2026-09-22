@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Scale, PencilRuler, HardHat, HandCoins } from "lucide-react";
-import { MapPlaceholder } from "@/components/MapPlaceholder";
 import { getServerSideURL } from "@/utilities/getURL";
 import { createPageMetadata, SITE_NAME } from "@/utilities/seo";
 
 const OPTIONS = [
   {
-    title: "تقنين الملكية",
-    description: "سجّل بياناتك وابدأ رحلة إنهاء تقنين أرضك ومتابعة حالتك أمام الجهاز أول بأول.",
+    title: "تقنين الأرض",
+    description:
+      "استعلم عن موقف أرضك من التقنين واعرف وصلت لفين أول بأول، واجعلنا ممثلينك القانونيين أمام الجهاز.",
     href: "/register",
     icon: Scale,
   },
@@ -20,13 +20,13 @@ const OPTIONS = [
   },
   {
     title: "تنفيذ المباني",
-    description: "تابع تنفيذ البناء على أرضك خطوة بخطوة بعد تقنينها.",
+    description: "اسمح لنا أن نكون شريكك في تنفيذ حلمك على أرض الواقع.",
     href: "/construction",
     icon: HardHat,
   },
   {
     title: "الشريك الممول",
-    description: "تواصل مع ممولين ومستثمرين لتمويل بناء أو تطوير أرضك.",
+    description: "تواصل مع مستثمرين لتوفير مبالغ التقنين أو تطوير أرضك.",
     href: "/funding-partner",
     icon: HandCoins,
   },
@@ -133,9 +133,11 @@ export default function Home() {
         <div className="grid sm:grid-cols-2 gap-6">
           <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
             <div className="relative aspect-[3/2]">
-              <MapPlaceholder
-                label="خريطة الجمعيات قبل التقنين"
-                className="absolute inset-0 h-full w-full"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/city-map-before.jpg"
+                alt="خريطة الجمعيات قبل التقنين"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 قبل
@@ -144,9 +146,11 @@ export default function Home() {
           </div>
           <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
             <div className="relative aspect-[3/2]">
-              <MapPlaceholder
-                label="خريطة الأحياء التفصيلية بعد التخطيط"
-                className="absolute inset-0 h-full w-full"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/city-map-after.jpg"
+                alt="خريطة الأحياء التفصيلية بعد التخطيط"
+                className="absolute inset-0 w-full h-full object-cover"
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 بعد
