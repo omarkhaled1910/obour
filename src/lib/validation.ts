@@ -50,7 +50,6 @@ const COOPERATIVES = [
 export const ownershipRegistrationSchema = z
   .object({
     fullName: requiredText('من فضلك أكمل الاسم ورقم الهاتف'),
-    nationalId: nationalIdField,
     governorate: requiredText('من فضلك أكمل كل الحقول المطلوبة'),
     phone: requiredText('من فضلك أكمل الاسم ورقم الهاتف'),
     email: emailField,
@@ -63,12 +62,16 @@ export const ownershipRegistrationSchema = z
     isBuilt: z.boolean().optional(),
     meterArea: z.string().optional(),
     plotNumber: requiredText('من فضلك أكمل بيانات المساحة ورقم القطعة'),
+    basinNumber: optionalText,
+    lineNumber: optionalText,
     sellerName: optionalText,
+    ownershipChain: optionalText,
     sizeSelection: requiredText('من فضلك أكمل بيانات المساحة ورقم القطعة'),
     buildingDescription: optionalText,
     buildingPhotos: mediaIdsField,
     ownershipDocuments: mediaIdsField,
     areaMaps: mediaIdsField,
+    ownerIdCard: mediaIdsField,
     notes: optionalText,
   })
   .superRefine((data, ctx) => {
@@ -99,6 +102,9 @@ export const ownershipRegistrationSchema = z
       }
       if (!data.sellerName?.trim()) {
         addIssue(ctx, 'من فضلك أدخل اسم البائع أو صاحب القطعة', ['sellerName'])
+      }
+      if (!data.ownershipChain?.trim()) {
+        addIssue(ctx, 'من فضلك أدخل تسلسل الملكية', ['ownershipChain'])
       }
     }
   })

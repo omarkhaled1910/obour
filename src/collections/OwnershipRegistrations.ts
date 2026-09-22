@@ -33,13 +33,7 @@ export const OwnershipRegistrations: CollectionConfig = {
         { label: 'مغلق', value: 'closed' },
       ],
     },
-    {
-      type: 'row',
-      fields: [
-        { name: 'fullName', label: 'الاسم بالكامل', type: 'text', required: true },
-        { name: 'nationalId', label: 'الرقم القومي', type: 'text', required: true },
-      ],
-    },
+    { name: 'fullName', label: 'الاسم بالكامل', type: 'text', required: true },
     {
       type: 'row',
       fields: [
@@ -72,12 +66,20 @@ export const OwnershipRegistrations: CollectionConfig = {
         { name: 'plotNumber', label: 'رقم القطعة', type: 'text', required: true },
       ],
     },
+    {
+      type: 'row',
+      fields: [
+        { name: 'basinNumber', label: 'رقم الحوض', type: 'text' },
+        { name: 'lineNumber', label: 'رقم الخط', type: 'text' },
+      ],
+    },
     { name: 'feddanCount', label: 'عدد الأفدنة', type: 'number' },
     { name: 'hasResidentialPlot', label: 'مع قطعة سكنية', type: 'checkbox' },
     { name: 'residentialPlotArea', label: 'مساحة القطعة السكنية', type: 'number' },
     { name: 'isBuilt', label: 'القطعة مبنية', type: 'checkbox' },
     { name: 'meterArea', label: 'المساحة بالمتر', type: 'number' },
     { name: 'sellerName', label: 'البائع / صاحب القطعة', type: 'text' },
+    { name: 'ownershipChain', label: 'تسلسل الملكية', type: 'text' },
     { name: 'sizeSelection', label: 'ملخص المساحة', type: 'text', required: true },
     { name: 'buildingDescription', label: 'وصف المبنى', type: 'textarea' },
     {
@@ -102,6 +104,13 @@ export const OwnershipRegistrations: CollectionConfig = {
       hasMany: true,
     },
     { name: 'notes', label: 'ملاحظات', type: 'textarea' },
+    {
+      name: 'ownerIdCard',
+      label: 'صورة بطاقة المالك',
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
+    },
   ],
   timestamps: true,
 }

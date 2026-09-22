@@ -67,7 +67,10 @@ export default function RegisterPage() {
   const [uploadError, setUploadError] = useState("");
   const [meterArea, setMeterArea] = useState("");
   const [plotNumber, setPlotNumber] = useState("");
+  const [basinNumber, setBasinNumber] = useState("");
+  const [lineNumber, setLineNumber] = useState("");
   const [sellerName, setSellerName] = useState("");
+  const [ownershipChain, setOwnershipChain] = useState("");
   const [sizeError, setSizeError] = useState("");
 
   const feddanInSqm =
@@ -77,7 +80,6 @@ export default function RegisterPage() {
 
   const [form, setForm] = useState({
     fullName: "",
-    nationalId: "",
     governorate: "",
     phone: "",
     email: "",
@@ -85,10 +87,13 @@ export default function RegisterPage() {
   });
   const [ownershipDocUrls, setOwnershipDocUrls] = useState<UploadedMedia[]>([]);
   const [areaMapUrls, setAreaMapUrls] = useState<UploadedMedia[]>([]);
+  const [ownerIdCardUrls, setOwnerIdCardUrls] = useState<UploadedMedia[]>([]);
   const [uploadingDocs, setUploadingDocs] = useState(false);
   const [uploadingMaps, setUploadingMaps] = useState(false);
+  const [uploadingIdCard, setUploadingIdCard] = useState(false);
   const [docsError, setDocsError] = useState("");
   const [mapsError, setMapsError] = useState("");
+  const [idCardError, setIdCardError] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -110,7 +115,10 @@ export default function RegisterPage() {
     setUploadError("");
     setMeterArea("");
     setPlotNumber("");
+    setBasinNumber("");
+    setLineNumber("");
     setSellerName("");
+    setOwnershipChain("");
     setSizeError("");
     setStep("size");
   }
@@ -165,6 +173,20 @@ export default function RegisterPage() {
     }
   }
 
+  async function handleOwnerIdCardSelected(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploadingIdCard(true);
+    setIdCardError("");
+    try {
+      const urls = await uploadFiles(files);
+      setOwnerIdCardUrls((prev) => [...prev, ...urls]);
+    } catch (err) {
+      setIdCardError(err instanceof Error ? err.message : "تعذّر رفع صورة البطاقة");
+    } finally {
+      setUploadingIdCard(false);
+    }
+  }
+
   function sizeSelectionSummary() {
     if (areaUnit === "feddan") {
       const parts = [`${feddanCount} فدان (${feddanInSqm} م²)`];
@@ -194,8 +216,8 @@ export default function RegisterPage() {
       setSizeError("اكتب مساحة القطعة السكنية وحدّد هل هي مبنية ولا لأ");
       return;
     }
-    if (areaUnit === "meter" && (!meterArea || !sellerName)) {
-      setSizeError("اكتب المساحة بالمتر واسم البائع أو صاحب القطعة");
+    if (areaUnit === "meter" && (!meterArea || !sellerName || !ownershipChain)) {
+      setSizeError("اكتب المساحة بالمتر واسم البائع وتسلسل الملكية");
       return;
     }
     if (!plotNumber) {
@@ -228,11 +250,15 @@ export default function RegisterPage() {
         meterArea: areaUnit === "meter" ? meterArea : undefined,
         sizeSelection: sizeSelectionSummary(),
         plotNumber,
+        basinNumber: basinNumber || undefined,
+        lineNumber: lineNumber || undefined,
         sellerName: areaUnit === "meter" ? sellerName : undefined,
+        ownershipChain: areaUnit === "meter" ? ownershipChain : undefined,
         buildingDescription: isBuilt ? buildingDescription : undefined,
         buildingPhotos: isBuilt ? buildingPhotoUrls.map((file) => file.id) : undefined,
         ownershipDocuments: ownershipDocUrls.map((file) => file.id),
         areaMaps: areaMapUrls.map((file) => file.id),
+        ownerIdCard: ownerIdCardUrls.map((file) => file.id),
       });
       if (!result.success) throw new Error(result.error);
       setStatus("done");
@@ -531,14 +557,40 @@ export default function RegisterPage() {
                   />
                 </Field>
 
+                <Field label="رقم الحوض (اختياري)">
+                  <input
+                    value={basinNumber}
+                    onChange={(e) => setBasinNumber(e.target.value)}
+                    className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                  />
+                </Field>
+
+                <Field label="رقم الخط (اختياري)">
+                  <input
+                    value={lineNumber}
+                    onChange={(e) => setLineNumber(e.target.value)}
+                    className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                  />
+                </Field>
+
                 {areaUnit === "meter" && (
-                  <Field label="اسم البائع / صاحب القطعة (شخص أو شركة)" required>
-                    <input
-                      value={sellerName}
-                      onChange={(e) => setSellerName(e.target.value)}
-                      className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
-                    />
-                  </Field>
+                  <>
+                    <Field label="اسم البائع / صاحب القطعة (شخص أو شركة)" required>
+                      <input
+                        value={sellerName}
+                        onChange={(e) => setSellerName(e.target.value)}
+                        className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                      />
+                    </Field>
+
+                    <Field label="تسلسل الملكية" required>
+                      <input
+                        value={ownershipChain}
+                        onChange={(e) => setOwnershipChain(e.target.value)}
+                        className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                      />
+                    </Field>
+                  </>
                 )}
               </div>
             )}
@@ -569,7 +621,10 @@ export default function RegisterPage() {
                 <strong>{sizeSelectionSummary()}</strong>
               </div>
               <div>رقم القطعة: {plotNumber}</div>
+              {basinNumber && <div>رقم الحوض: {basinNumber}</div>}
+              {lineNumber && <div>رقم الخط: {lineNumber}</div>}
               {sellerName && <div>البائع/صاحب القطعة: {sellerName}</div>}
+              {ownershipChain && <div>تسلسل الملكية: {ownershipChain}</div>}
               <div>
                 الموقف الحالي: <strong>{applicationStatus}</strong>
               </div>
@@ -581,17 +636,6 @@ export default function RegisterPage() {
                   required
                   value={form.fullName}
                   onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))}
-                  className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
-                />
-              </Field>
-
-              <Field label="الرقم القومي" required>
-                <input
-                  required
-                  pattern="[0-9]{14}"
-                  title="الرقم القومي 14 رقم"
-                  value={form.nationalId}
-                  onChange={(e) => setForm((f) => ({ ...f, nationalId: e.target.value }))}
                   className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
                 />
               </Field>
@@ -685,6 +729,29 @@ export default function RegisterPage() {
                   rows={3}
                   className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
                 />
+              </Field>
+
+              <Field label="صورة بطاقة المالك (اختياري)">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                  multiple
+                  disabled={uploadingIdCard}
+                  onChange={(e) => {
+                    handleOwnerIdCardSelected(e.target.files);
+                    e.target.value = "";
+                  }}
+                  className="w-full text-sm"
+                />
+                {uploadingIdCard && (
+                  <p className="text-xs text-emerald-700 mt-1">جاري رفع الصورة...</p>
+                )}
+                {idCardError && <p className="text-xs text-red-600 mt-1">{idCardError}</p>}
+                {ownerIdCardUrls.length > 0 && (
+                  <p className="text-xs text-stone-500 mt-1">
+                    تم رفع {ownerIdCardUrls.length} ملف/ملفات
+                  </p>
+                )}
               </Field>
 
               <button

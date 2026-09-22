@@ -31,7 +31,6 @@ type Cooperative =
 
 export type OwnershipRegistrationInput = {
   fullName: string
-  nationalId: string
   governorate: string
   phone: string
   email?: string
@@ -44,12 +43,16 @@ export type OwnershipRegistrationInput = {
   isBuilt?: boolean
   meterArea?: string
   plotNumber: string
+  basinNumber?: string
+  lineNumber?: string
   sellerName?: string
+  ownershipChain?: string
   sizeSelection: string
   buildingDescription?: string
   buildingPhotos?: string[]
   ownershipDocuments?: string[]
   areaMaps?: string[]
+  ownerIdCard?: string[]
   notes?: string
 }
 
@@ -170,7 +173,6 @@ export async function submitOwnershipRegistration(
       collection: 'ownership-registrations',
       data: {
         fullName: data.fullName,
-        nationalId: data.nationalId,
         governorate: data.governorate,
         phone: data.phone,
         email: data.email,
@@ -187,12 +189,16 @@ export async function submitOwnershipRegistration(
         isBuilt: data.areaUnit === 'feddan' && data.hasResidentialPlot ? data.isBuilt : undefined,
         meterArea: data.areaUnit === 'meter' ? Number(data.meterArea) : undefined,
         plotNumber: data.plotNumber,
+        basinNumber: data.basinNumber,
+        lineNumber: data.lineNumber,
         sellerName: data.areaUnit === 'meter' ? data.sellerName : undefined,
+        ownershipChain: data.areaUnit === 'meter' ? data.ownershipChain : undefined,
         sizeSelection: data.sizeSelection,
         buildingDescription: data.isBuilt ? data.buildingDescription : undefined,
         buildingPhotos: data.isBuilt ? data.buildingPhotos : [],
         ownershipDocuments: data.ownershipDocuments,
         areaMaps: data.areaMaps,
+        ownerIdCard: data.ownerIdCard,
         notes: data.notes,
       },
     })

@@ -136,7 +136,6 @@ export interface OwnershipRegistration {
   id: string;
   reviewStatus: 'new' | 'in-review' | 'contacted' | 'closed';
   fullName: string;
-  nationalId: string;
   governorate: string;
   phone: string;
   email?: string | null;
@@ -144,18 +143,22 @@ export interface OwnershipRegistration {
   applicationStatus: string;
   areaUnit: 'feddan' | 'meter';
   plotNumber: string;
+  basinNumber?: string | null;
+  lineNumber?: string | null;
   feddanCount?: number | null;
   hasResidentialPlot?: boolean | null;
   residentialPlotArea?: number | null;
   isBuilt?: boolean | null;
   meterArea?: number | null;
   sellerName?: string | null;
+  ownershipChain?: string | null;
   sizeSelection: string;
   buildingDescription?: string | null;
   buildingPhotos?: (string | Media)[] | null;
   ownershipDocuments?: (string | Media)[] | null;
   areaMaps?: (string | Media)[] | null;
   notes?: string | null;
+  ownerIdCard?: (string | Media)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -466,7 +469,6 @@ export interface PayloadMigration {
 export interface OwnershipRegistrationsSelect<T extends boolean = true> {
   reviewStatus?: T;
   fullName?: T;
-  nationalId?: T;
   governorate?: T;
   phone?: T;
   email?: T;
@@ -474,18 +476,22 @@ export interface OwnershipRegistrationsSelect<T extends boolean = true> {
   applicationStatus?: T;
   areaUnit?: T;
   plotNumber?: T;
+  basinNumber?: T;
+  lineNumber?: T;
   feddanCount?: T;
   hasResidentialPlot?: T;
   residentialPlotArea?: T;
   isBuilt?: T;
   meterArea?: T;
   sellerName?: T;
+  ownershipChain?: T;
   sizeSelection?: T;
   buildingDescription?: T;
   buildingPhotos?: T;
   ownershipDocuments?: T;
   areaMaps?: T;
   notes?: T;
+  ownerIdCard?: T;
   updatedAt?: T;
   createdAt?: T;
 }

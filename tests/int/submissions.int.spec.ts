@@ -25,7 +25,6 @@ describe('submission server actions', () => {
   it('creates a structured ownership registration with media relationships', async () => {
     const result = await submitOwnershipRegistration({
       fullName: 'محمد أحمد',
-      nationalId: '12345678901234',
       governorate: 'القاهرة',
       phone: '01000000000',
       cooperative: 'الأمل',
@@ -57,10 +56,9 @@ describe('submission server actions', () => {
     )
   })
 
-  it('rejects an invalid national ID', async () => {
+  it('rejects a meter-area registration missing the ownership chain', async () => {
     const result = await submitOwnershipRegistration({
       fullName: 'محمد أحمد',
-      nationalId: '123',
       governorate: 'القاهرة',
       phone: '01000000000',
       cooperative: 'الأمل',
