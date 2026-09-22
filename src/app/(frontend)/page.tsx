@@ -131,32 +131,48 @@ export default function Home() {
       <section className="mx-auto max-w-5xl px-4 pb-16">
         <h2 className="text-xl font-bold text-stone-900 mb-6 text-center">قبل وبعد</h2>
         <div className="grid sm:grid-cols-2 gap-6">
-          <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
+          <a
+            href="/images/city-map-before.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-stone-100 border border-stone-200 rounded-xl overflow-hidden group"
+          >
             <div className="relative aspect-[3/2]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/city-map-before.jpg"
                 alt="خريطة الجمعيات قبل التقنين"
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.02] transition-transform"
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 قبل
               </span>
+              <span className="absolute bottom-3 end-3 bg-stone-900/80 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                اضغط للتكبير
+              </span>
             </div>
-          </div>
-          <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
+          </a>
+          <a
+            href="/images/city-map-after.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-stone-100 border border-stone-200 rounded-xl overflow-hidden group"
+          >
             <div className="relative aspect-[3/2]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/city-map-after.jpg"
                 alt="خريطة الأحياء التفصيلية بعد التخطيط"
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.02] transition-transform"
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 بعد
               </span>
+              <span className="absolute bottom-3 end-3 bg-stone-900/80 text-white text-xs px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                اضغط للتكبير
+              </span>
             </div>
-          </div>
+          </a>
         </div>
       </section>
     </div>
