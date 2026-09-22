@@ -713,7 +713,7 @@ function Stepper({ step }: { step: Step }) {
   const steps: { key: Step; label: string }[] = [
     { key: "cooperative", label: "الجمعية" },
     { key: "status", label: "الموقف الحالي" },
-    { key: "size", label: "المساحة" },
+    { key: "size", label: "بيانات الأرض" },
     { key: "details", label: "بيانات المالك" },
   ];
   const activeIndex = steps.findIndex((s) => s.key === step);
