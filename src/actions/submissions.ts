@@ -2,6 +2,13 @@
 
 import config from '@payload-config'
 import { getPayload } from 'payload'
+import {
+  constructionRequestSchema,
+  fundingPartnerRequestSchema,
+  licensingRequestSchema,
+  ownershipRegistrationSchema,
+  parseOrThrow,
+} from '@/lib/validation'
 
 export type ActionResult<T = undefined> =
   | { success: true; data: T }
@@ -99,44 +106,6 @@ const ALLOWED_FILE_TYPES = new Set([
   'application/pdf',
 ])
 
-function clean(value: unknown): string {
-  return typeof value === 'string' ? value.trim() : ''
-}
-
-function optional(value: unknown): string | undefined {
-  const result = clean(value)
-  return result || undefined
-}
-
-function positiveNumber(value: unknown, label: string): number {
-  const parsed = Number(value)
-  if (!Number.isFinite(parsed) || parsed <= 0) {
-    throw new Error(`من فضلك أدخل ${label} بشكل صحيح`)
-  }
-  return parsed
-}
-
-function validateContact(name: unknown, phone: unknown, email?: unknown) {
-  if (!clean(name) || !clean(phone)) {
-    throw new Error('من فضلك أكمل الاسم ورقم الهاتف')
-  }
-  const normalizedEmail = optional(email)
-  if (normalizedEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-    throw new Error('من فضلك أدخل بريدًا إلكترونيًا صحيحًا')
-  }
-}
-
-function validateNationalId(value: unknown) {
-  if (!/^\d{14}$/.test(clean(value))) {
-    throw new Error('الرقم القومي يجب أن يتكون من 14 رقمًا')
-  }
-}
-
-function mediaIDs(value?: string[]): string[] {
-  if (!Array.isArray(value)) return []
-  return value.filter((item): item is string => typeof item === 'string' && item.length > 0)
-}
-
 function failure<T = undefined>(error: unknown): ActionResult<T> {
   console.error(error)
   const message = error instanceof Error ? error.message : ''
@@ -194,63 +163,37 @@ export async function submitOwnershipRegistration(
   input: OwnershipRegistrationInput,
 ): Promise<ActionResult<{ id: string }>> {
   try {
-    validateContact(input.fullName, input.phone, input.email)
-    validateNationalId(input.nationalId)
-
-    if (!clean(input.governorate) || !clean(input.cooperative) || !clean(input.applicationStatus)) {
-      throw new Error('من فضلك أكمل كل الحقول المطلوبة')
-    }
-    if (!clean(input.plotNumber) || !clean(input.sizeSelection)) {
-      throw new Error('من فضلك أكمل بيانات المساحة ورقم القطعة')
-    }
-    if (input.areaUnit === 'feddan') {
-      positiveNumber(input.feddanCount, 'عدد الأفدنة')
-      if (typeof input.hasResidentialPlot !== 'boolean') {
-        throw new Error('حدّد هل توجد قطعة سكنية')
-      }
-      if (input.hasResidentialPlot) {
-        positiveNumber(input.residentialPlotArea, 'مساحة القطعة السكنية')
-        if (typeof input.isBuilt !== 'boolean') throw new Error('حدّد هل القطعة مبنية')
-      }
-    } else if (input.areaUnit === 'meter') {
-      positiveNumber(input.meterArea, 'المساحة بالمتر')
-      if (!clean(input.sellerName)) throw new Error('من فضلك أدخل اسم البائع أو صاحب القطعة')
-    } else {
-      throw new Error('من فضلك اختر وحدة المساحة')
-    }
+    const data = parseOrThrow(ownershipRegistrationSchema, input)
 
     const payload = await getPayload({ config })
     const record = await payload.create({
       collection: 'ownership-registrations',
       data: {
-        fullName: clean(input.fullName),
-        nationalId: clean(input.nationalId),
-        governorate: clean(input.governorate),
-        phone: clean(input.phone),
-        email: optional(input.email),
+        fullName: data.fullName,
+        nationalId: data.nationalId,
+        governorate: data.governorate,
+        phone: data.phone,
+        email: data.email,
         reviewStatus: 'new',
-        cooperative: input.cooperative,
-        applicationStatus: clean(input.applicationStatus),
-        areaUnit: input.areaUnit,
-        feddanCount:
-          input.areaUnit === 'feddan' ? positiveNumber(input.feddanCount, 'عدد الأفدنة') : undefined,
-        hasResidentialPlot: input.areaUnit === 'feddan' ? input.hasResidentialPlot : undefined,
+        cooperative: data.cooperative,
+        applicationStatus: data.applicationStatus,
+        areaUnit: data.areaUnit,
+        feddanCount: data.areaUnit === 'feddan' ? Number(data.feddanCount) : undefined,
+        hasResidentialPlot: data.areaUnit === 'feddan' ? data.hasResidentialPlot : undefined,
         residentialPlotArea:
-          input.areaUnit === 'feddan' && input.hasResidentialPlot
-            ? positiveNumber(input.residentialPlotArea, 'مساحة القطعة السكنية')
+          data.areaUnit === 'feddan' && data.hasResidentialPlot
+            ? Number(data.residentialPlotArea)
             : undefined,
-        isBuilt:
-          input.areaUnit === 'feddan' && input.hasResidentialPlot ? input.isBuilt : undefined,
-        meterArea:
-          input.areaUnit === 'meter' ? positiveNumber(input.meterArea, 'المساحة بالمتر') : undefined,
-        plotNumber: clean(input.plotNumber),
-        sellerName: input.areaUnit === 'meter' ? clean(input.sellerName) : undefined,
-        sizeSelection: clean(input.sizeSelection),
-        buildingDescription: input.isBuilt ? optional(input.buildingDescription) : undefined,
-        buildingPhotos: input.isBuilt ? mediaIDs(input.buildingPhotos) : [],
-        ownershipDocuments: mediaIDs(input.ownershipDocuments),
-        areaMaps: mediaIDs(input.areaMaps),
-        notes: optional(input.notes),
+        isBuilt: data.areaUnit === 'feddan' && data.hasResidentialPlot ? data.isBuilt : undefined,
+        meterArea: data.areaUnit === 'meter' ? Number(data.meterArea) : undefined,
+        plotNumber: data.plotNumber,
+        sellerName: data.areaUnit === 'meter' ? data.sellerName : undefined,
+        sizeSelection: data.sizeSelection,
+        buildingDescription: data.isBuilt ? data.buildingDescription : undefined,
+        buildingPhotos: data.isBuilt ? data.buildingPhotos : [],
+        ownershipDocuments: data.ownershipDocuments,
+        areaMaps: data.areaMaps,
+        notes: data.notes,
       },
     })
 
@@ -264,43 +207,27 @@ export async function submitLicensingRequest(
   input: LicensingRequestInput,
 ): Promise<ActionResult<{ id: string }>> {
   try {
-    validateContact(input.fullName, input.phone, input.email)
-    validateNationalId(input.nationalId)
-    if (
-      !input.serviceType ||
-      !clean(input.plotNumber) ||
-      !clean(input.districtNumber) ||
-      !clean(input.neighborhoodNumber) ||
-      !clean(input.governorate) ||
-      !input.ownerType
-    ) {
-      throw new Error('من فضلك أكمل كل الحقول المطلوبة')
-    }
-    const powerOfAttorneyDocuments = mediaIDs(input.powerOfAttorneyDocuments)
-    if (input.ownerType === 'بتوكيل' && powerOfAttorneyDocuments.length === 0) {
-      throw new Error('من فضلك ارفع صورة التوكيل')
-    }
+    const data = parseOrThrow(licensingRequestSchema, input)
 
     const payload = await getPayload({ config })
     const record = await payload.create({
       collection: 'licensing-requests',
       data: {
         reviewStatus: 'new',
-        serviceType: input.serviceType,
-        allocationNotices: mediaIDs(input.allocationNotices),
-        plotAreaSqm: positiveNumber(input.plotAreaSqm, 'مساحة القطعة'),
-        plotNumber: clean(input.plotNumber),
-        districtNumber: clean(input.districtNumber),
-        neighborhoodNumber: clean(input.neighborhoodNumber),
-        fullName: clean(input.fullName),
-        nationalId: clean(input.nationalId),
-        nationalIdPhotos: mediaIDs(input.nationalIdPhotos),
-        governorate: clean(input.governorate),
-        phone: clean(input.phone),
-        email: optional(input.email),
-        ownerType: input.ownerType,
-        powerOfAttorneyDocuments:
-          input.ownerType === 'بتوكيل' ? powerOfAttorneyDocuments : [],
+        serviceType: data.serviceType,
+        allocationNotices: data.allocationNotices,
+        plotAreaSqm: Number(data.plotAreaSqm),
+        plotNumber: data.plotNumber,
+        districtNumber: data.districtNumber,
+        neighborhoodNumber: data.neighborhoodNumber,
+        fullName: data.fullName,
+        nationalId: data.nationalId,
+        nationalIdPhotos: data.nationalIdPhotos,
+        governorate: data.governorate,
+        phone: data.phone,
+        email: data.email,
+        ownerType: data.ownerType,
+        powerOfAttorneyDocuments: data.ownerType === 'بتوكيل' ? data.powerOfAttorneyDocuments : [],
       },
     })
 
@@ -314,23 +241,20 @@ export async function submitConstructionRequest(
   input: ConstructionRequestInput,
 ): Promise<ActionResult<{ id: string }>> {
   try {
-    validateContact(input.contactName, input.contactPhone, input.contactEmail)
-    if (!clean(input.workDescription)) {
-      throw new Error('من فضلك اكتب وصف الإنشاءات المراد تنفيذها')
-    }
+    const data = parseOrThrow(constructionRequestSchema, input)
 
     const payload = await getPayload({ config })
     const record = await payload.create({
       collection: 'construction-requests',
       data: {
         reviewStatus: 'new',
-        allocationNotices: mediaIDs(input.allocationNotices),
-        receiptMinutes: mediaIDs(input.receiptMinutes),
-        licenseDocuments: mediaIDs(input.licenseDocuments),
-        workDescription: clean(input.workDescription),
-        contactName: clean(input.contactName),
-        contactPhone: clean(input.contactPhone),
-        contactEmail: optional(input.contactEmail),
+        allocationNotices: data.allocationNotices,
+        receiptMinutes: data.receiptMinutes,
+        licenseDocuments: data.licenseDocuments,
+        workDescription: data.workDescription,
+        contactName: data.contactName,
+        contactPhone: data.contactPhone,
+        contactEmail: data.contactEmail,
       },
     })
 
@@ -344,49 +268,25 @@ export async function submitFundingPartnerRequest(
   input: FundingPartnerRequestInput,
 ): Promise<ActionResult<{ id: string }>> {
   try {
-    validateContact(input.contactName, input.contactPhone, input.contactEmail)
-    if (!input.ownershipStatus || !input.partnershipType) {
-      throw new Error('من فضلك أكمل كل الحقول المطلوبة')
-    }
-
-    const allocationNotices = mediaIDs(input.allocationNotices)
-    const receiptMinutes = mediaIDs(input.receiptMinutes)
-    const licenseDocuments = mediaIDs(input.licenseDocuments)
-
-    if (
-      input.ownershipStatus === 'إخطار تخصيص' &&
-      allocationNotices.length + receiptMinutes.length + licenseDocuments.length === 0
-    ) {
-      throw new Error('من فضلك ارفع مستند ملكية واحدًا على الأقل')
-    }
-    if (input.ownershipStatus === 'اسم على صفحة الجهاز') {
-      positiveNumber(input.landAreaSqm, 'مساحة الأرض')
-      if (typeof input.tanqinSeriousnessPaid !== 'boolean') {
-        throw new Error('حدّد حالة سداد جدية التقنين')
-      }
-    }
+    const data = parseOrThrow(fundingPartnerRequestSchema, input)
 
     const payload = await getPayload({ config })
     const record = await payload.create({
       collection: 'funding-partner-requests',
       data: {
         reviewStatus: 'new',
-        ownershipStatus: input.ownershipStatus,
-        allocationNotices,
-        receiptMinutes,
-        licenseDocuments,
+        ownershipStatus: data.ownershipStatus,
+        allocationNotices: data.allocationNotices,
+        receiptMinutes: data.receiptMinutes,
+        licenseDocuments: data.licenseDocuments,
         landAreaSqm:
-          input.ownershipStatus === 'اسم على صفحة الجهاز'
-            ? positiveNumber(input.landAreaSqm, 'مساحة الأرض')
-            : undefined,
+          data.ownershipStatus === 'اسم على صفحة الجهاز' ? Number(data.landAreaSqm) : undefined,
         tanqinSeriousnessPaid:
-          input.ownershipStatus === 'اسم على صفحة الجهاز'
-            ? input.tanqinSeriousnessPaid
-            : undefined,
-        partnershipType: input.partnershipType,
-        contactName: clean(input.contactName),
-        contactPhone: clean(input.contactPhone),
-        contactEmail: optional(input.contactEmail),
+          data.ownershipStatus === 'اسم على صفحة الجهاز' ? data.tanqinSeriousnessPaid : undefined,
+        partnershipType: data.partnershipType,
+        contactName: data.contactName,
+        contactPhone: data.contactPhone,
+        contactEmail: data.contactEmail,
       },
     })
 
