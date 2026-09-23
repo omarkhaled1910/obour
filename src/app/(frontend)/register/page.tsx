@@ -4,6 +4,7 @@ import { useState } from "react";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
 import { FileInput } from "@/components/FileInput";
 import {
+  submitCallbackRequest,
   submitOwnershipRegistration,
   uploadFilesAction,
   type UploadedMedia,
@@ -50,7 +51,7 @@ const APPLICATION_STATUSES = [
   "تم تقنين قطعة الأرض الزراعية التي اتملك فيها ولم أجد اسمي بكشوف الجهاز",
 ];
 
-type Step = "cooperative" | "status" | "size" | "details";
+type Step = "cooperative" | "contactPreference" | "status" | "size" | "details" | "callback";
 
 export default function RegisterPage() {
   const [step, setStep] = useState<Step>("cooperative");
@@ -101,10 +102,50 @@ export default function RegisterPage() {
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const [callbackLandArea, setCallbackLandArea] = useState("");
+  const [callbackPhone, setCallbackPhone] = useState("");
+  const [callbackNotes, setCallbackNotes] = useState("");
+  const [callbackError, setCallbackError] = useState("");
+  const [callbackStatus, setCallbackStatus] = useState<"idle" | "saving" | "done" | "error">(
+    "idle",
+  );
+
   function pickCooperative(c: Cooperative) {
     setCooperative(c);
     setApplicationStatus(null);
+    setStep("contactPreference");
+  }
+
+  function chooseFullForm() {
     setStep("status");
+  }
+
+  function chooseCallback() {
+    setStep("callback");
+  }
+
+  async function handleCallbackSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!cooperative) return;
+    if (!callbackLandArea || !callbackPhone) {
+      setCallbackError("من فضلك اكتب مساحة الأرض ورقم الهاتف");
+      return;
+    }
+    setCallbackError("");
+    setCallbackStatus("saving");
+    try {
+      const result = await submitCallbackRequest({
+        cooperative,
+        landArea: callbackLandArea,
+        phone: callbackPhone,
+        notes: callbackNotes || undefined,
+      });
+      if (!result.success) throw new Error(result.error);
+      setCallbackStatus("done");
+    } catch (err) {
+      setCallbackStatus("error");
+      setCallbackError(err instanceof Error ? err.message : "حدث خطأ غير متوقع");
+    }
   }
 
   function pickStatus(label: string) {
@@ -303,7 +344,7 @@ export default function RegisterPage() {
       </div>
 
       <div className="mx-auto max-w-2xl px-4 py-10">
-        <Stepper step={step} />
+        {step !== "contactPreference" && step !== "callback" && <Stepper step={step} />}
 
         {step === "cooperative" && (
           <div>
@@ -358,13 +399,114 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {step === "status" && cooperative && (
+        {step === "contactPreference" && cooperative && (
           <div>
             <button
               onClick={() => setStep("cooperative")}
               className="text-sm text-emerald-700 mb-4 hover:underline"
             >
               ← رجوع لاختيار الجمعية
+            </button>
+
+            <h2 className="font-bold text-stone-900 mb-1">تحب تكمل إزاي؟</h2>
+            <p className="text-sm text-stone-600 mb-5">
+              أرضك في جمعية <strong>{cooperative}</strong> — اختار الطريقة الأنسب لك
+            </p>
+
+            <div className="grid gap-4">
+              <button
+                onClick={chooseFullForm}
+                className="border border-stone-200 bg-white rounded-xl p-5 text-right hover:border-emerald-500 hover:shadow-md transition-all"
+              >
+                <div className="font-bold text-emerald-800 mb-1">أكمل التسجيل بالتفصيل</div>
+                <div className="text-sm text-stone-500">
+                  هتسجّل بيانات أرضك وموقفك بالتفصيل دلوقتي
+                </div>
+              </button>
+              <button
+                onClick={chooseCallback}
+                className="border border-stone-200 bg-white rounded-xl p-5 text-right hover:border-emerald-500 hover:shadow-md transition-all"
+              >
+                <div className="font-bold text-emerald-800 mb-1">أفضّل حد يكلمني تليفونيا</div>
+                <div className="text-sm text-stone-500">
+                  اكتب مساحة أرضك ورقم هاتفك بس، وهنتواصل معاك في أقرب وقت
+                </div>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === "callback" && cooperative && (
+          <div>
+            <button
+              onClick={() => setStep("contactPreference")}
+              className="text-sm text-emerald-700 mb-4 hover:underline"
+            >
+              ← رجوع
+            </button>
+
+            {callbackStatus === "done" ? (
+              <div className="bg-white border border-stone-200 rounded-xl p-6 text-center">
+                <p className="text-emerald-700 font-bold mb-1">تم إرسال طلبك بنجاح</p>
+                <p className="text-sm text-stone-600">هنتواصل معاك في أقرب وقت.</p>
+              </div>
+            ) : (
+              <form
+                onSubmit={handleCallbackSubmit}
+                className="bg-white border border-stone-200 rounded-xl p-6 space-y-4"
+              >
+                <h2 className="font-bold text-stone-900 mb-1">تواصل تليفوني</h2>
+                <p className="text-sm text-stone-600 mb-3">
+                  جمعية <strong>{cooperative}</strong> — اكتب البيانات دي وهنكلّمك في أقرب وقت
+                </p>
+
+                <Field label="مساحة الأرض" required>
+                  <input
+                    value={callbackLandArea}
+                    onChange={(e) => setCallbackLandArea(e.target.value)}
+                    placeholder="مثال: 3 فدان أو 500 متر"
+                    className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                  />
+                </Field>
+
+                <Field label="رقم الهاتف" required>
+                  <input
+                    value={callbackPhone}
+                    onChange={(e) => setCallbackPhone(e.target.value)}
+                    className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                  />
+                </Field>
+
+                <Field label="ملاحظات (اختياري)">
+                  <textarea
+                    value={callbackNotes}
+                    onChange={(e) => setCallbackNotes(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
+                  />
+                </Field>
+
+                {callbackError && <p className="text-red-600 text-sm">{callbackError}</p>}
+
+                <button
+                  type="submit"
+                  disabled={callbackStatus === "saving"}
+                  className="w-full rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800 disabled:opacity-60"
+                >
+                  {callbackStatus === "saving" ? "جاري الإرسال..." : "إرسال"}
+                </button>
+              </form>
+            )}
+          </div>
+        )}
+
+        {step === "status" && cooperative && (
+          <div>
+            <button
+              onClick={() => setStep("contactPreference")}
+              className="text-sm text-emerald-700 mb-4 hover:underline"
+            >
+              ← رجوع
             </button>
             <h2 className="font-bold text-stone-900 mb-1">إيه الموقف الحالي لحالتك؟</h2>
             <p className="text-sm text-stone-600 mb-5">اختر الوصف الأقرب لموقفك أمام الجهاز</p>

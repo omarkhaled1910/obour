@@ -3,6 +3,7 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import {
+  callbackRequestSchema,
   constructionRequestSchema,
   fundingPartnerRequestSchema,
   licensingRequestSchema,
@@ -54,6 +55,13 @@ export type OwnershipRegistrationInput = {
   ownershipDocuments?: string[]
   areaMaps?: string[]
   ownerIdCard?: string[]
+  notes?: string
+}
+
+export type CallbackRequestInput = {
+  cooperative: Cooperative
+  landArea: string
+  phone: string
   notes?: string
 }
 
@@ -202,6 +210,30 @@ export async function submitOwnershipRegistration(
         ownershipDocuments: data.ownershipDocuments,
         areaMaps: data.areaMaps,
         ownerIdCard: data.ownerIdCard,
+        notes: data.notes,
+      },
+    })
+
+    return { success: true, data: { id: String(record.id) } }
+  } catch (error) {
+    return failure<{ id: string }>(error)
+  }
+}
+
+export async function submitCallbackRequest(
+  input: CallbackRequestInput,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const data = parseOrThrow(callbackRequestSchema, input)
+
+    const payload = await getPayload({ config })
+    const record = await payload.create({
+      collection: 'callback-requests',
+      data: {
+        reviewStatus: 'new',
+        cooperative: data.cooperative,
+        landArea: data.landArea,
+        phone: data.phone,
         notes: data.notes,
       },
     })

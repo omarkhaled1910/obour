@@ -112,6 +112,15 @@ export const ownershipRegistrationSchema = z
 
 export type OwnershipRegistrationParsed = z.infer<typeof ownershipRegistrationSchema>
 
+export const callbackRequestSchema = z.object({
+  cooperative: z.enum(COOPERATIVES, 'من فضلك أكمل كل الحقول المطلوبة'),
+  landArea: requiredText('من فضلك اكتب مساحة الأرض'),
+  phone: requiredText('من فضلك اكتب رقم الهاتف'),
+  notes: optionalText,
+})
+
+export type CallbackRequestParsed = z.infer<typeof callbackRequestSchema>
+
 export const licensingRequestSchema = z
   .object({
     serviceType: z.enum(['تصميم هندسي', 'استصدار رخصة'], 'من فضلك أكمل كل الحقول المطلوبة'),

@@ -71,6 +71,7 @@ export interface Config {
     'licensing-requests': LicensingRequest;
     'construction-requests': ConstructionRequest;
     'funding-partner-requests': FundingPartnerRequest;
+    'callback-requests': CallbackRequest;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -89,6 +90,7 @@ export interface Config {
     'licensing-requests': LicensingRequestsSelect<false> | LicensingRequestsSelect<true>;
     'construction-requests': ConstructionRequestsSelect<false> | ConstructionRequestsSelect<true>;
     'funding-partner-requests': FundingPartnerRequestsSelect<false> | FundingPartnerRequestsSelect<true>;
+    'callback-requests': CallbackRequestsSelect<false> | CallbackRequestsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -346,6 +348,20 @@ export interface FundingPartnerRequest {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "callback-requests".
+ */
+export interface CallbackRequest {
+  id: string;
+  reviewStatus: 'new' | 'in-review' | 'contacted' | 'closed';
+  cooperative: 'الطلائع' | 'مصر الجديدة' | 'أحمد عرابي' | 'الأمل' | 'القادسية' | 'مصر التعاونية' | 'اتحاد الوفاق';
+  landArea: string;
+  phone: string;
+  notes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -409,6 +425,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'funding-partner-requests';
         value: string | FundingPartnerRequest;
+      } | null)
+    | ({
+        relationTo: 'callback-requests';
+        value: string | CallbackRequest;
       } | null)
     | ({
         relationTo: 'media';
@@ -554,6 +574,19 @@ export interface FundingPartnerRequestsSelect<T extends boolean = true> {
   allocationNotices?: T;
   receiptMinutes?: T;
   licenseDocuments?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "callback-requests_select".
+ */
+export interface CallbackRequestsSelect<T extends boolean = true> {
+  reviewStatus?: T;
+  cooperative?: T;
+  landArea?: T;
+  phone?: T;
+  notes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

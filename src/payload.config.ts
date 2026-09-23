@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url'
 
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
+import { CallbackRequests } from './collections/CallbackRequests'
 import { ConstructionRequests } from './collections/ConstructionRequests'
 import { FundingPartnerRequests } from './collections/FundingPartnerRequests'
 import { LicensingRequests } from './collections/LicensingRequests'
@@ -49,6 +50,7 @@ export default buildConfig({
     LicensingRequests,
     ConstructionRequests,
     FundingPartnerRequests,
+    CallbackRequests,
     Media,
     Users,
   ],
