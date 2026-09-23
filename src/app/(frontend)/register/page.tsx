@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
+import { FileInput } from "@/components/FileInput";
 import {
   submitOwnershipRegistration,
   uploadFilesAction,
@@ -516,16 +517,10 @@ export default function RegisterPage() {
                           />
                         </Field>
                         <Field label="صور المبنى (اختياري)">
-                          <input
-                            type="file"
+                          <FileInput
                             accept="image/jpeg,image/png,image/webp,image/gif"
-                            multiple
                             disabled={uploadingPhotos}
-                            onChange={(e) => {
-                              handlePhotosSelected(e.target.files);
-                              e.target.value = "";
-                            }}
-                            className="w-full text-sm"
+                            onFilesSelected={handlePhotosSelected}
                           />
                           {uploadingPhotos && (
                             <p className="text-xs text-emerald-700 mt-1">جاري رفع الصور...</p>
@@ -613,16 +608,9 @@ export default function RegisterPage() {
                     </Field>
 
                     <Field label="مستندات تسلسل الملكية (اختياري)">
-                      <input
-                        type="file"
-                        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-                        multiple
+                      <FileInput
                         disabled={uploadingChainDocs}
-                        onChange={(e) => {
-                          handleOwnershipChainDocsSelected(e.target.files);
-                          e.target.value = "";
-                        }}
-                        className="w-full text-sm"
+                        onFilesSelected={handleOwnershipChainDocsSelected}
                       />
                       {uploadingChainDocs && (
                         <p className="text-xs text-emerald-700 mt-1">جاري رفع المستندات...</p>
@@ -723,16 +711,9 @@ export default function RegisterPage() {
               </Field>
 
               <Field label="صورة مستند الملكية (اختياري)">
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-                  multiple
+                <FileInput
                   disabled={uploadingDocs}
-                  onChange={(e) => {
-                    handleOwnershipDocsSelected(e.target.files);
-                    e.target.value = "";
-                  }}
-                  className="w-full text-sm"
+                  onFilesSelected={handleOwnershipDocsSelected}
                 />
                 {uploadingDocs && (
                   <p className="text-xs text-emerald-700 mt-1">جاري رفع المستند...</p>
@@ -746,16 +727,9 @@ export default function RegisterPage() {
               </Field>
 
               <Field label="خرائط المساحة (اختياري)">
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-                  multiple
+                <FileInput
                   disabled={uploadingMaps}
-                  onChange={(e) => {
-                    handleAreaMapsSelected(e.target.files);
-                    e.target.value = "";
-                  }}
-                  className="w-full text-sm"
+                  onFilesSelected={handleAreaMapsSelected}
                 />
                 {uploadingMaps && (
                   <p className="text-xs text-emerald-700 mt-1">جاري رفع الخرائط...</p>
@@ -778,16 +752,9 @@ export default function RegisterPage() {
               </Field>
 
               <Field label="صورة بطاقة المالك (اختياري)">
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-                  multiple
+                <FileInput
                   disabled={uploadingIdCard}
-                  onChange={(e) => {
-                    handleOwnerIdCardSelected(e.target.files);
-                    e.target.value = "";
-                  }}
-                  className="w-full text-sm"
+                  onFilesSelected={handleOwnerIdCardSelected}
                 />
                 {uploadingIdCard && (
                   <p className="text-xs text-emerald-700 mt-1">جاري رفع الصورة...</p>

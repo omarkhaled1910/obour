@@ -78,6 +78,7 @@ export type ConstructionRequestInput = {
   allocationNotices?: string[]
   receiptMinutes?: string[]
   licenseDocuments?: string[]
+  setbackLetters?: string[]
   workDescription: string
   contactName: string
   contactPhone: string
@@ -259,6 +260,7 @@ export async function submitConstructionRequest(
         allocationNotices: data.allocationNotices,
         receiptMinutes: data.receiptMinutes,
         licenseDocuments: data.licenseDocuments,
+        setbackLetters: data.setbackLetters,
         workDescription: data.workDescription,
         contactName: data.contactName,
         contactPhone: data.contactPhone,

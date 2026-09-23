@@ -63,6 +63,13 @@ export const ConstructionRequests: CollectionConfig = {
       relationTo: 'media',
       hasMany: true,
     },
+    {
+      name: 'setbackLetters',
+      label: 'خطاب إبعاد الأرض',
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
+    },
   ],
   timestamps: true,
 }

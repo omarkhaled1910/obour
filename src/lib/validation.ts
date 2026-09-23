@@ -141,6 +141,7 @@ export const constructionRequestSchema = z.object({
   allocationNotices: mediaIdsField,
   receiptMinutes: mediaIdsField,
   licenseDocuments: mediaIdsField,
+  setbackLetters: mediaIdsField,
   workDescription: requiredText('من فضلك اكتب وصف الإنشاءات المراد تنفيذها'),
   contactName: requiredText('من فضلك أكمل الاسم ورقم الهاتف'),
   contactPhone: requiredText('من فضلك أكمل الاسم ورقم الهاتف'),

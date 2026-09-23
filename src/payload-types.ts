@@ -320,6 +320,7 @@ export interface ConstructionRequest {
   allocationNotices?: (string | Media)[] | null;
   receiptMinutes?: (string | Media)[] | null;
   licenseDocuments?: (string | Media)[] | null;
+  setbackLetters?: (string | Media)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -533,6 +534,7 @@ export interface ConstructionRequestsSelect<T extends boolean = true> {
   allocationNotices?: T;
   receiptMinutes?: T;
   licenseDocuments?: T;
+  setbackLetters?: T;
   updatedAt?: T;
   createdAt?: T;
 }

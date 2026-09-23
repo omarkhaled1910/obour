@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { FileInput } from "@/components/FileInput";
 import {
   submitFundingPartnerRequest,
   uploadFilesAction,
@@ -438,17 +439,7 @@ function UploadField({
 }) {
   return (
     <Field label={label}>
-      <input
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-        multiple
-        disabled={uploading}
-        onChange={(e) => {
-          if (e.target.files && e.target.files.length > 0) onSelect(e.target.files);
-          e.target.value = "";
-        }}
-        className="w-full text-sm"
-      />
+      <FileInput disabled={uploading} onFilesSelected={onSelect} />
       {uploading && <p className="text-xs text-emerald-700 mt-1">جاري الرفع...</p>}
       {urls.length > 0 && (
         <p className="text-xs text-stone-500 mt-1">تم رفع {urls.length} ملف/ملفات</p>

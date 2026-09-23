@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { FileInput } from "@/components/FileInput";
 import {
   submitConstructionRequest,
   uploadFilesAction,
   type UploadedMedia,
 } from "@/actions/submissions";
 
-type Step = "documents" | "work" | "contact" | "estimate";
+type Step = "documents" | "work" | "contact";
 
 export default function ConstructionPage() {
   const [step, setStep] = useState<Step>("documents");
@@ -15,6 +16,7 @@ export default function ConstructionPage() {
   const [allocationNoticeUrls, setAllocationNoticeUrls] = useState<UploadedMedia[]>([]);
   const [receiptMinutesUrls, setReceiptMinutesUrls] = useState<UploadedMedia[]>([]);
   const [licensePhotoUrls, setLicensePhotoUrls] = useState<UploadedMedia[]>([]);
+  const [setbackLetterUrls, setSetbackLetterUrls] = useState<UploadedMedia[]>([]);
   const [uploading, setUploading] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState("");
 
@@ -61,7 +63,7 @@ export default function ConstructionPage() {
       return;
     }
     setContactError("");
-    setStep("estimate");
+    handleSubmit();
   }
 
   async function handleSubmit() {
@@ -72,6 +74,7 @@ export default function ConstructionPage() {
         allocationNotices: allocationNoticeUrls.map((file) => file.id),
         receiptMinutes: receiptMinutesUrls.map((file) => file.id),
         licenseDocuments: licensePhotoUrls.map((file) => file.id),
+        setbackLetters: setbackLetterUrls.map((file) => file.id),
         workDescription,
         contactName,
         contactPhone,
@@ -131,6 +134,15 @@ export default function ConstructionPage() {
                 onSelect={async (files) => {
                   const urls = await uploadFiles(files, "license");
                   setLicensePhotoUrls((prev) => [...prev, ...urls]);
+                }}
+              />
+              <UploadField
+                label="خطاب إبعاد الأرض"
+                uploading={uploading === "setback"}
+                urls={setbackLetterUrls}
+                onSelect={async (files) => {
+                  const urls = await uploadFiles(files, "setback");
+                  setSetbackLetterUrls((prev) => [...prev, ...urls]);
                 }}
               />
             </div>
@@ -216,44 +228,17 @@ export default function ConstructionPage() {
               </Field>
             </div>
 
-            {contactError && <p className="text-red-600 text-sm mt-3">{contactError}</p>}
-
-            <button
-              onClick={handleContinueFromContact}
-              className="w-full mt-5 rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800"
-            >
-              متابعة
-            </button>
-          </div>
-        )}
-
-        {step === "estimate" && (
-          <div>
-            <button
-              onClick={() => setStep("contact")}
-              className="text-sm text-emerald-700 mb-4 hover:underline"
-            >
-              ← رجوع لبيانات التواصل
-            </button>
-            <h2 className="font-bold text-stone-900 mb-1">تقدير التكلفة</h2>
-            <p className="text-sm text-stone-600 mb-5">مراجعة أخيرة لطلبك قبل الإرسال</p>
-
-            <div className="bg-white border border-stone-200 rounded-xl p-6 space-y-2 text-sm text-stone-700 mb-5">
-              <div>الإنشاءات المطلوبة: {workDescription}</div>
-              <div>
-                التواصل: {contactName} — {contactPhone}
-              </div>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 text-sm text-amber-900 mb-5">
+            <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 text-sm text-amber-900 mt-5">
               تقدير التكلفة أو دراسة الجدوى السعرية للمطلوب هيتحدد بعد مراجعة فريقنا الهندسي
               لطلبك، وهنتواصل معاك بالتفاصيل بمجرد المراجعة.
             </div>
 
+            {contactError && <p className="text-red-600 text-sm mt-3">{contactError}</p>}
+
             <button
-              onClick={handleSubmit}
+              onClick={handleContinueFromContact}
               disabled={status === "saving"}
-              className="w-full rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800 disabled:opacity-60"
+              className="w-full mt-5 rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800 disabled:opacity-60"
             >
               {status === "saving" ? "جاري الإرسال..." : "إرسال الطلب"}
             </button>
@@ -278,7 +263,6 @@ function Stepper({ step }: { step: Step }) {
     { key: "documents", label: "المستندات" },
     { key: "work", label: "الإنشاءات المطلوبة" },
     { key: "contact", label: "بيانات التواصل" },
-    { key: "estimate", label: "تقدير التكلفة" },
   ];
   const activeIndex = steps.findIndex((s) => s.key === step);
   return (
@@ -334,17 +318,7 @@ function UploadField({
 }) {
   return (
     <Field label={`${label} (اختياري)`}>
-      <input
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-        multiple
-        disabled={uploading}
-        onChange={(e) => {
-          if (e.target.files && e.target.files.length > 0) onSelect(e.target.files);
-          e.target.value = "";
-        }}
-        className="w-full text-sm"
-      />
+      <FileInput disabled={uploading} onFilesSelected={onSelect} />
       {uploading && <p className="text-xs text-emerald-700 mt-1">جاري الرفع...</p>}
       {urls.length > 0 && (
         <p className="text-xs text-stone-500 mt-1">تم رفع {urls.length} ملف/ملفات</p>

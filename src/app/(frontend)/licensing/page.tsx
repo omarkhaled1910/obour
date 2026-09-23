@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
+import { FileInput } from "@/components/FileInput";
 import {
   submitLicensingRequest,
   uploadFilesAction,
@@ -163,19 +164,12 @@ export default function LicensingPage() {
 
             <div className="bg-white border border-stone-200 rounded-xl p-6 space-y-4">
               <Field label="صورة إخطار/محضر التخصيص (اختياري)">
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-                  multiple
+                <FileInput
                   disabled={uploading === "allocation"}
-                  onChange={async (e) => {
-                    if (e.target.files) {
-                      const urls = await uploadFiles(e.target.files, "allocation");
-                      setAllocationNoticeUrls((prev) => [...prev, ...urls]);
-                    }
-                    e.target.value = "";
+                  onFilesSelected={async (files) => {
+                    const urls = await uploadFiles(files, "allocation");
+                    setAllocationNoticeUrls((prev) => [...prev, ...urls]);
                   }}
-                  className="w-full text-sm"
                 />
                 {uploading === "allocation" && (
                   <p className="text-xs text-emerald-700 mt-1">جاري الرفع...</p>
@@ -265,19 +259,13 @@ export default function LicensingPage() {
               </Field>
 
               <Field label="صورة بطاقة الرقم القومي (اختياري)">
-                <input
-                  type="file"
+                <FileInput
                   accept="image/jpeg,image/png,image/webp,image/gif"
-                  multiple
                   disabled={uploading === "nationalId"}
-                  onChange={async (e) => {
-                    if (e.target.files) {
-                      const urls = await uploadFiles(e.target.files, "nationalId");
-                      setNationalIdPhotoUrls((prev) => [...prev, ...urls]);
-                    }
-                    e.target.value = "";
+                  onFilesSelected={async (files) => {
+                    const urls = await uploadFiles(files, "nationalId");
+                    setNationalIdPhotoUrls((prev) => [...prev, ...urls]);
                   }}
-                  className="w-full text-sm"
                 />
                 {uploading === "nationalId" && (
                   <p className="text-xs text-emerald-700 mt-1">جاري الرفع...</p>
@@ -353,19 +341,12 @@ export default function LicensingPage() {
 
               {ownerType === "بتوكيل" && (
                 <Field label="صورة التوكيل" required>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
-                    multiple
+                  <FileInput
                     disabled={uploading === "poa"}
-                    onChange={async (e) => {
-                      if (e.target.files) {
-                        const urls = await uploadFiles(e.target.files, "poa");
-                        setPowerOfAttorneyUrls((prev) => [...prev, ...urls]);
-                      }
-                      e.target.value = "";
+                    onFilesSelected={async (files) => {
+                      const urls = await uploadFiles(files, "poa");
+                      setPowerOfAttorneyUrls((prev) => [...prev, ...urls]);
                     }}
-                    className="w-full text-sm"
                   />
                   {uploading === "poa" && (
                     <p className="text-xs text-emerald-700 mt-1">جاري الرفع...</p>
