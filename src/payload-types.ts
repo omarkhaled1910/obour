@@ -289,7 +289,7 @@ export interface FolderInterface {
 export interface LicensingRequest {
   id: string;
   reviewStatus: 'new' | 'in-review' | 'contacted' | 'closed';
-  serviceType: 'محضر استلام أرض' | 'استصدار رخصة';
+  serviceType: 'تصميم هندسي' | 'استصدار رخصة';
   plotAreaSqm: number;
   plotNumber: string;
   districtNumber: string;

@@ -114,7 +114,7 @@ export type OwnershipRegistrationParsed = z.infer<typeof ownershipRegistrationSc
 
 export const licensingRequestSchema = z
   .object({
-    serviceType: z.enum(['محضر استلام أرض', 'استصدار رخصة'], 'من فضلك أكمل كل الحقول المطلوبة'),
+    serviceType: z.enum(['تصميم هندسي', 'استصدار رخصة'], 'من فضلك أكمل كل الحقول المطلوبة'),
     allocationNotices: mediaIdsField,
     plotAreaSqm: positiveNumberString('مساحة القطعة'),
     plotNumber: requiredText('من فضلك أكمل كل الحقول المطلوبة'),

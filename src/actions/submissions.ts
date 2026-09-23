@@ -58,7 +58,7 @@ export type OwnershipRegistrationInput = {
 }
 
 export type LicensingRequestInput = {
-  serviceType: 'محضر استلام أرض' | 'استصدار رخصة'
+  serviceType: 'تصميم هندسي' | 'استصدار رخصة'
   allocationNotices?: string[]
   plotAreaSqm: string
   plotNumber: string

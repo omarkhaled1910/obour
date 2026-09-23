@@ -6,9 +6,9 @@ import { createPageMetadata } from '@/utilities/seo'
 export const metadata: Metadata = createPageMetadata({
   title: 'الرسومات الهندسية وتراخيص البناء',
   description:
-    'اطلب محضر استلام أرض أو رسومات هندسية واستصدار رخصة بناء لقطعتك في مدينة العبور الجديدة.',
+    'اطلب تصميم هندسي أو رسومات هندسية واستصدار رخصة بناء لقطعتك في مدينة العبور الجديدة.',
   path: '/licensing',
-  keywords: ['ترخيص بناء العبور الجديدة', 'محضر استلام أرض', 'رسومات هندسية معتمدة'],
+  keywords: ['ترخيص بناء العبور الجديدة', 'تصميم هندسي', 'رسومات هندسية معتمدة'],
 })
 
 export default function LicensingLayout({ children }: { children: ReactNode }) {

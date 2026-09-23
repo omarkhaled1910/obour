@@ -38,7 +38,7 @@ export const LicensingRequests: CollectionConfig = {
       label: 'نوع الخدمة',
       type: 'select',
       required: true,
-      options: ['محضر استلام أرض', 'استصدار رخصة'],
+      options: ['تصميم هندسي', 'استصدار رخصة'],
     },
     {
       type: 'row',
