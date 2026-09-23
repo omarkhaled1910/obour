@@ -152,6 +152,7 @@ export interface OwnershipRegistration {
   meterArea?: number | null;
   sellerName?: string | null;
   ownershipChain?: string | null;
+  ownershipChainDocuments?: (string | Media)[] | null;
   sizeSelection: string;
   buildingDescription?: string | null;
   buildingPhotos?: (string | Media)[] | null;
@@ -485,6 +486,7 @@ export interface OwnershipRegistrationsSelect<T extends boolean = true> {
   meterArea?: T;
   sellerName?: T;
   ownershipChain?: T;
+  ownershipChainDocuments?: T;
   sizeSelection?: T;
   buildingDescription?: T;
   buildingPhotos?: T;

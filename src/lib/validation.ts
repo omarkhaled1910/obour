@@ -66,6 +66,7 @@ export const ownershipRegistrationSchema = z
     lineNumber: optionalText,
     sellerName: optionalText,
     ownershipChain: optionalText,
+    ownershipChainDocuments: mediaIdsField,
     sizeSelection: requiredText('من فضلك أكمل بيانات المساحة ورقم القطعة'),
     buildingDescription: optionalText,
     buildingPhotos: mediaIdsField,

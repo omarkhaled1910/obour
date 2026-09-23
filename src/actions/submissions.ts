@@ -47,6 +47,7 @@ export type OwnershipRegistrationInput = {
   lineNumber?: string
   sellerName?: string
   ownershipChain?: string
+  ownershipChainDocuments?: string[]
   sizeSelection: string
   buildingDescription?: string
   buildingPhotos?: string[]
@@ -193,6 +194,7 @@ export async function submitOwnershipRegistration(
         lineNumber: data.lineNumber,
         sellerName: data.areaUnit === 'meter' ? data.sellerName : undefined,
         ownershipChain: data.areaUnit === 'meter' ? data.ownershipChain : undefined,
+        ownershipChainDocuments: data.areaUnit === 'meter' ? data.ownershipChainDocuments : [],
         sizeSelection: data.sizeSelection,
         buildingDescription: data.isBuilt ? data.buildingDescription : undefined,
         buildingPhotos: data.isBuilt ? data.buildingPhotos : [],

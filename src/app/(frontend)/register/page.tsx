@@ -88,12 +88,15 @@ export default function RegisterPage() {
   const [ownershipDocUrls, setOwnershipDocUrls] = useState<UploadedMedia[]>([]);
   const [areaMapUrls, setAreaMapUrls] = useState<UploadedMedia[]>([]);
   const [ownerIdCardUrls, setOwnerIdCardUrls] = useState<UploadedMedia[]>([]);
+  const [ownershipChainDocUrls, setOwnershipChainDocUrls] = useState<UploadedMedia[]>([]);
   const [uploadingDocs, setUploadingDocs] = useState(false);
   const [uploadingMaps, setUploadingMaps] = useState(false);
   const [uploadingIdCard, setUploadingIdCard] = useState(false);
+  const [uploadingChainDocs, setUploadingChainDocs] = useState(false);
   const [docsError, setDocsError] = useState("");
   const [mapsError, setMapsError] = useState("");
   const [idCardError, setIdCardError] = useState("");
+  const [chainDocsError, setChainDocsError] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -119,6 +122,8 @@ export default function RegisterPage() {
     setLineNumber("");
     setSellerName("");
     setOwnershipChain("");
+    setOwnershipChainDocUrls([]);
+    setChainDocsError("");
     setSizeError("");
     setStep("size");
   }
@@ -184,6 +189,20 @@ export default function RegisterPage() {
       setIdCardError(err instanceof Error ? err.message : "تعذّر رفع صورة البطاقة");
     } finally {
       setUploadingIdCard(false);
+    }
+  }
+
+  async function handleOwnershipChainDocsSelected(files: FileList | null) {
+    if (!files || files.length === 0) return;
+    setUploadingChainDocs(true);
+    setChainDocsError("");
+    try {
+      const urls = await uploadFiles(files);
+      setOwnershipChainDocUrls((prev) => [...prev, ...urls]);
+    } catch (err) {
+      setChainDocsError(err instanceof Error ? err.message : "تعذّر رفع المستندات");
+    } finally {
+      setUploadingChainDocs(false);
     }
   }
 
@@ -254,6 +273,8 @@ export default function RegisterPage() {
         lineNumber: lineNumber || undefined,
         sellerName: areaUnit === "meter" ? sellerName : undefined,
         ownershipChain: areaUnit === "meter" ? ownershipChain : undefined,
+        ownershipChainDocuments:
+          areaUnit === "meter" ? ownershipChainDocUrls.map((file) => file.id) : undefined,
         buildingDescription: isBuilt ? buildingDescription : undefined,
         buildingPhotos: isBuilt ? buildingPhotoUrls.map((file) => file.id) : undefined,
         ownershipDocuments: ownershipDocUrls.map((file) => file.id),
@@ -589,6 +610,31 @@ export default function RegisterPage() {
                         onChange={(e) => setOwnershipChain(e.target.value)}
                         className="w-full rounded-lg border border-stone-300 px-3 py-2 focus:border-emerald-600 focus:outline-none"
                       />
+                    </Field>
+
+                    <Field label="مستندات تسلسل الملكية (اختياري)">
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                        multiple
+                        disabled={uploadingChainDocs}
+                        onChange={(e) => {
+                          handleOwnershipChainDocsSelected(e.target.files);
+                          e.target.value = "";
+                        }}
+                        className="w-full text-sm"
+                      />
+                      {uploadingChainDocs && (
+                        <p className="text-xs text-emerald-700 mt-1">جاري رفع المستندات...</p>
+                      )}
+                      {chainDocsError && (
+                        <p className="text-xs text-red-600 mt-1">{chainDocsError}</p>
+                      )}
+                      {ownershipChainDocUrls.length > 0 && (
+                        <p className="text-xs text-stone-500 mt-1">
+                          تم رفع {ownershipChainDocUrls.length} ملف/ملفات
+                        </p>
+                      )}
                     </Field>
                   </>
                 )}

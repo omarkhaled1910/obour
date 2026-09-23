@@ -80,6 +80,13 @@ export const OwnershipRegistrations: CollectionConfig = {
     { name: 'meterArea', label: 'المساحة بالمتر', type: 'number' },
     { name: 'sellerName', label: 'البائع / صاحب القطعة', type: 'text' },
     { name: 'ownershipChain', label: 'تسلسل الملكية', type: 'text' },
+    {
+      name: 'ownershipChainDocuments',
+      label: 'مستندات تسلسل الملكية',
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
+    },
     { name: 'sizeSelection', label: 'ملخص المساحة', type: 'text', required: true },
     { name: 'buildingDescription', label: 'وصف المبنى', type: 'textarea' },
     {
