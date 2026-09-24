@@ -11,7 +11,7 @@ import {
 
 type ServiceType = "تصميم هندسي" | "استصدار رخصة";
 type OwnerType = "مالك أساسي" | "بتوكيل";
-type Step = "type" | "plot" | "owner" | "review";
+type Step = "type" | "plot" | "owner";
 
 export default function LicensingPage() {
   const [step, setStep] = useState<Step>("type");
@@ -81,7 +81,7 @@ export default function LicensingPage() {
       return;
     }
     setOwnerError("");
-    setStep("review");
+    handleSubmit();
   }
 
   async function handleSubmit() {
@@ -236,7 +236,7 @@ export default function LicensingPage() {
             >
               ← رجوع لبيانات القطعة
             </button>
-            <h2 className="font-bold text-stone-900 mb-1">بيانات المالك</h2>
+            <h2 className="font-bold text-stone-900 mb-1">بيانات المالك للتواصل</h2>
             <p className="text-sm text-stone-600 mb-5">بيانات صاحب الطلب</p>
 
             <div className="bg-white border border-stone-200 rounded-xl p-6 space-y-4">
@@ -365,45 +365,8 @@ export default function LicensingPage() {
 
             <button
               onClick={handleContinueFromOwner}
-              className="w-full mt-5 rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800"
-            >
-              متابعة
-            </button>
-          </div>
-        )}
-
-        {step === "review" && (
-          <div>
-            <button
-              onClick={() => setStep("owner")}
-              className="text-sm text-emerald-700 mb-4 hover:underline"
-            >
-              ← رجوع لبيانات المالك
-            </button>
-            <h2 className="font-bold text-stone-900 mb-1">الرسوم ومدة العمل</h2>
-            <p className="text-sm text-stone-600 mb-5">
-              مراجعة أخيرة لطلبك قبل الإرسال
-            </p>
-
-            <div className="bg-white border border-stone-200 rounded-xl p-6 space-y-2 text-sm text-stone-700 mb-5">
-              <div>الخدمة: <strong>{serviceType}</strong></div>
-              <div>
-                القطعة: مساحة {plotAreaSqm} م² — رقم {plotNumber} — حي {districtNumber} — مجاورة{" "}
-                {neighborhoodNumber}
-              </div>
-              <div>المالك: {fullName} — {governorate} — {phone}</div>
-              <div>الصفة: {ownerType}</div>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 text-sm text-amber-900 mb-5">
-              الرسوم ومدة العمل المطلوبة لقطعتك بتتحدد بعد مراجعة فريقنا لطلبك، وهنتواصل معاك
-              بالتفاصيل بمجرد المراجعة.
-            </div>
-
-            <button
-              onClick={handleSubmit}
               disabled={status === "saving"}
-              className="w-full rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800 disabled:opacity-60"
+              className="w-full mt-5 rounded-lg bg-emerald-700 text-white font-medium py-2.5 hover:bg-emerald-800 disabled:opacity-60"
             >
               {status === "saving" ? "جاري الإرسال..." : "إرسال الطلب"}
             </button>
@@ -427,8 +390,7 @@ function Stepper({ step }: { step: Step }) {
   const steps: { key: Step; label: string }[] = [
     { key: "type", label: "نوع الخدمة" },
     { key: "plot", label: "بيانات القطعة" },
-    { key: "owner", label: "بيانات المالك" },
-    { key: "review", label: "الرسوم والمدة" },
+    { key: "owner", label: "بيانات المالك للتواصل" },
   ];
   const activeIndex = steps.findIndex((s) => s.key === step);
   return (
