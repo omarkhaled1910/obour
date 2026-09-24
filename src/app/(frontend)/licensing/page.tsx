@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
 import { FileInput } from "@/components/FileInput";
 import {
@@ -39,6 +39,14 @@ export default function LicensingPage() {
 
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
+
+  useEffect(() => {
+    function handlePageShow(e: PageTransitionEvent) {
+      if (e.persisted) setStep("type");
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   async function uploadFiles(files: FileList, field: string): Promise<UploadedMedia[]> {
     setUploading(field);

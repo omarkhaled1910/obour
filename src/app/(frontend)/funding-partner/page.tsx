@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileInput } from "@/components/FileInput";
 import {
   submitFundingPartnerRequest,
@@ -46,6 +46,14 @@ export default function FundingPartnerPage() {
 
   const [status, setStatus] = useState<"idle" | "saving" | "done" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
+
+  useEffect(() => {
+    function handlePageShow(e: PageTransitionEvent) {
+      if (e.persisted) setStep("status");
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   async function uploadFiles(files: FileList, field: string): Promise<UploadedMedia[]> {
     setUploading(field);

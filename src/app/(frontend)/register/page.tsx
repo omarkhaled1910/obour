@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
 import { FileInput } from "@/components/FileInput";
@@ -111,6 +111,14 @@ export default function RegisterPage() {
   const [callbackStatus, setCallbackStatus] = useState<"idle" | "saving" | "done" | "error">(
     "idle",
   );
+
+  useEffect(() => {
+    function handlePageShow(e: PageTransitionEvent) {
+      if (e.persisted) setStep("cooperative");
+    }
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   function pickCooperative(c: Cooperative) {
     setCooperative(c);
