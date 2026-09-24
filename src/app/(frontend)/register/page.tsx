@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
 import { FileInput } from "@/components/FileInput";
 import {
@@ -445,6 +446,15 @@ export default function RegisterPage() {
                   اكتب مساحة أرضك ورقم هاتفك بس، وهنتواصل معاك في أقرب وقت
                 </div>
               </button>
+              <Link
+                href="/calculator"
+                className="block border border-stone-200 bg-white rounded-xl p-5 text-right hover:border-emerald-500 hover:shadow-md transition-all"
+              >
+                <div className="font-bold text-emerald-800 mb-1">تجربة محاكاة تقنين الأرض</div>
+                <div className="text-sm text-stone-500">
+                  احسب تقدير مستحقات تقنين أرضك على مساحات مختلفة قبل ما تكمل التسجيل
+                </div>
+              </Link>
             </div>
           </div>
         )}
