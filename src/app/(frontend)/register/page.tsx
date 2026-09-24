@@ -945,7 +945,7 @@ function Stepper({ step }: { step: Step }) {
   ];
   const activeIndex = steps.findIndex((s) => s.key === step);
   return (
-    <div className="flex items-center justify-center gap-2 mb-8 text-sm">
+    <div className="flex items-center justify-center gap-2 mb-8 text-sm flex-wrap">
       {steps.map((s, i) => (
         <div key={s.key} className="flex items-center gap-2">
           <span
