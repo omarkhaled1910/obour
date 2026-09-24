@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: "تنفيذ المباني", href: "/construction" },
   { label: "الشريك الممول", href: "/funding-partner" },
   { label: "تواصل معنا", href: "/contact" },
+  { label: "حسابي", href: "/account" },
 ];
 
 export function MobileNav() {

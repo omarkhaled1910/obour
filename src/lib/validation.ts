@@ -199,6 +199,25 @@ export const fundingPartnerRequestSchema = z
 
 export type FundingPartnerRequestParsed = z.infer<typeof fundingPartnerRequestSchema>
 
+export const memberSignUpSchema = z.object({
+  fullName: requiredText('من فضلك اكتب الاسم بالكامل'),
+  phone: requiredText('من فضلك اكتب رقم الهاتف'),
+  password: z.string().min(6, 'كلمة السر لازم تكون 6 حروف/أرقام على الأقل'),
+  age: optionalText,
+  job: optionalText,
+  email: emailField,
+  governorate: optionalText,
+})
+
+export type MemberSignUpParsed = z.infer<typeof memberSignUpSchema>
+
+export const memberLoginSchema = z.object({
+  phone: requiredText('من فضلك اكتب رقم الهاتف'),
+  password: requiredText('من فضلك اكتب كلمة السر'),
+})
+
+export type MemberLoginParsed = z.infer<typeof memberLoginSchema>
+
 export function parseOrThrow<T extends z.ZodTypeAny>(schema: T, input: unknown): z.infer<T> {
   const result = schema.safeParse(input)
   if (!result.success) {

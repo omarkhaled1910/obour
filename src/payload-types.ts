@@ -63,6 +63,7 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
+    members: MemberAuthOperations;
     users: UserAuthOperations;
   };
   blocks: {};
@@ -72,6 +73,7 @@ export interface Config {
     'construction-requests': ConstructionRequest;
     'funding-partner-requests': FundingPartnerRequest;
     'callback-requests': CallbackRequest;
+    members: Member;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -91,6 +93,7 @@ export interface Config {
     'construction-requests': ConstructionRequestsSelect<false> | ConstructionRequestsSelect<true>;
     'funding-partner-requests': FundingPartnerRequestsSelect<false> | FundingPartnerRequestsSelect<true>;
     'callback-requests': CallbackRequestsSelect<false> | CallbackRequestsSelect<true>;
+    members: MembersSelect<false> | MembersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -106,10 +109,26 @@ export interface Config {
   globals: {};
   globalsSelect: {};
   locale: null;
-  user: User;
+  user: Member | User;
   jobs: {
     tasks: unknown;
     workflows: unknown;
+  };
+}
+export interface MemberAuthOperations {
+  forgotPassword: {
+    username: string;
+  };
+  login: {
+    password: string;
+    username: string;
+  };
+  registerFirstUser: {
+    password: string;
+    username: string;
+  };
+  unlock: {
+    username: string;
   };
 }
 export interface UserAuthOperations {
@@ -362,6 +381,36 @@ export interface CallbackRequest {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members".
+ */
+export interface Member {
+  id: string;
+  fullName: string;
+  age?: number | null;
+  job?: string | null;
+  governorate?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email?: string | null;
+  username: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'members';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -431,6 +480,10 @@ export interface PayloadLockedDocument {
         value: string | CallbackRequest;
       } | null)
     | ({
+        relationTo: 'members';
+        value: string | Member;
+      } | null)
+    | ({
         relationTo: 'media';
         value: string | Media;
       } | null)
@@ -443,10 +496,15 @@ export interface PayloadLockedDocument {
         value: string | FolderInterface;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'members';
+        value: string | Member;
+      }
+    | {
+        relationTo: 'users';
+        value: string | User;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -456,10 +514,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: string;
-  user: {
-    relationTo: 'users';
-    value: string | User;
-  };
+  user:
+    | {
+        relationTo: 'members';
+        value: string | Member;
+      }
+    | {
+        relationTo: 'users';
+        value: string | User;
+      };
   key?: string | null;
   value?:
     | {
@@ -589,6 +652,33 @@ export interface CallbackRequestsSelect<T extends boolean = true> {
   notes?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "members_select".
+ */
+export interface MembersSelect<T extends boolean = true> {
+  fullName?: T;
+  age?: T;
+  job?: T;
+  governorate?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  username?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

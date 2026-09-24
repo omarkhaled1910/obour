@@ -10,6 +10,7 @@ import { CallbackRequests } from './collections/CallbackRequests'
 import { ConstructionRequests } from './collections/ConstructionRequests'
 import { FundingPartnerRequests } from './collections/FundingPartnerRequests'
 import { LicensingRequests } from './collections/LicensingRequests'
+import { Members } from './collections/Members'
 import { OwnershipRegistrations } from './collections/OwnershipRegistrations'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
@@ -51,6 +52,7 @@ export default buildConfig({
     ConstructionRequests,
     FundingPartnerRequests,
     CallbackRequests,
+    Members,
     Media,
     Users,
   ],
