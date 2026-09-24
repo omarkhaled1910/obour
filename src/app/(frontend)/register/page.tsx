@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
 import { FileInput } from "@/components/FileInput";
 import {
@@ -350,11 +351,14 @@ export default function RegisterPage() {
         {step === "cooperative" && (
           <div>
             <div className="relative rounded-xl overflow-hidden border border-stone-200 mb-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/city-map-before.jpg"
                 alt="خريطة جمعيات مدينة العبور"
+                width={1354}
+                height={768}
+                sizes="(max-width: 640px) 100vw, 672px"
                 className="w-full h-auto block"
+                priority
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 قبل

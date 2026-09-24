@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Scale, PencilRuler, HardHat, HandCoins } from "lucide-react";
 import { getServerSideURL } from "@/utilities/getURL";
@@ -138,11 +139,12 @@ export default function Home() {
             className="block bg-stone-100 border border-stone-200 rounded-xl overflow-hidden group"
           >
             <div className="relative aspect-[3/2]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/city-map-before.jpg"
                 alt="خريطة الجمعيات قبل التقنين"
-                className="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.02] transition-transform"
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-contain group-hover:scale-[1.02] transition-transform"
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 قبل
@@ -159,11 +161,12 @@ export default function Home() {
             className="block bg-stone-100 border border-stone-200 rounded-xl overflow-hidden group"
           >
             <div className="relative aspect-[3/2]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/images/city-map-after.jpg"
                 alt="خريطة الأحياء التفصيلية بعد التخطيط"
-                className="absolute inset-0 w-full h-full object-contain group-hover:scale-[1.02] transition-transform"
+                fill
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-contain group-hover:scale-[1.02] transition-transform"
               />
               <span className="absolute top-3 start-3 bg-stone-900/80 text-white text-xs font-bold px-3 py-1 rounded-full">
                 بعد
