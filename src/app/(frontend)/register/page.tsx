@@ -445,18 +445,12 @@ export default function RegisterPage() {
                 </div>
               </button>
               <Link
-                href={
-                  cooperative === "الطلائع" || cooperative === "مصر الجديدة"
-                    ? "/calculator-in-kind"
-                    : "/calculator"
-                }
+                href="/calculator-select"
                 className="block border border-stone-200 bg-white rounded-xl p-5 text-right hover:border-emerald-500 hover:shadow-md transition-all"
               >
                 <div className="font-bold text-emerald-800 mb-1">تجربة محاكاة تقنين الأرض</div>
                 <div className="text-sm text-stone-500">
-                  {cooperative === "الطلائع" || cooperative === "مصر الجديدة"
-                    ? "احسب المساحة اللي هتفضل ليك بعد التقنين حسب نظام التقنين المناسب لك"
-                    : "احسب تقدير مستحقات تقنين أرضك على مساحات مختلفة قبل ما تكمل التسجيل"}
+                  احسب تقدير تقنين أرضك حسب مساحتها ونوع التقنين المناسب لحالتك
                 </div>
               </Link>
             </div>
