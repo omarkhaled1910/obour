@@ -12,6 +12,7 @@ import { FundingPartnerRequests } from './collections/FundingPartnerRequests'
 import { LicensingRequests } from './collections/LicensingRequests'
 import { Members } from './collections/Members'
 import { OwnershipRegistrations } from './collections/OwnershipRegistrations'
+import { Suggestions } from './collections/Suggestions'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -53,6 +54,7 @@ export default buildConfig({
     FundingPartnerRequests,
     CallbackRequests,
     Members,
+    Suggestions,
     Media,
     Users,
   ],

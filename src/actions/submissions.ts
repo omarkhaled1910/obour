@@ -9,6 +9,7 @@ import {
   licensingRequestSchema,
   ownershipRegistrationSchema,
   parseOrThrow,
+  suggestionSchema,
 } from '@/lib/validation'
 
 export type ActionResult<T = undefined> =
@@ -63,6 +64,12 @@ export type CallbackRequestInput = {
   landArea: string
   phone: string
   notes?: string
+}
+
+export type SuggestionInput = {
+  message: string
+  name?: string
+  contact?: string
 }
 
 export type LicensingRequestInput = {
@@ -235,6 +242,29 @@ export async function submitCallbackRequest(
         landArea: data.landArea,
         phone: data.phone,
         notes: data.notes,
+      },
+    })
+
+    return { success: true, data: { id: String(record.id) } }
+  } catch (error) {
+    return failure<{ id: string }>(error)
+  }
+}
+
+export async function submitSuggestion(
+  input: SuggestionInput,
+): Promise<ActionResult<{ id: string }>> {
+  try {
+    const data = parseOrThrow(suggestionSchema, input)
+
+    const payload = await getPayload({ config })
+    const record = await payload.create({
+      collection: 'suggestions',
+      data: {
+        reviewStatus: 'new',
+        message: data.message,
+        name: data.name,
+        contact: data.contact,
       },
     })
 

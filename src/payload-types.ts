@@ -74,6 +74,7 @@ export interface Config {
     'funding-partner-requests': FundingPartnerRequest;
     'callback-requests': CallbackRequest;
     members: Member;
+    suggestions: Suggestion;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -94,6 +95,7 @@ export interface Config {
     'funding-partner-requests': FundingPartnerRequestsSelect<false> | FundingPartnerRequestsSelect<true>;
     'callback-requests': CallbackRequestsSelect<false> | CallbackRequestsSelect<true>;
     members: MembersSelect<false> | MembersSelect<true>;
+    suggestions: SuggestionsSelect<false> | SuggestionsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -411,6 +413,19 @@ export interface Member {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suggestions".
+ */
+export interface Suggestion {
+  id: string;
+  reviewStatus: 'new' | 'in-review' | 'contacted' | 'closed';
+  message: string;
+  name?: string | null;
+  contact?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -482,6 +497,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'members';
         value: string | Member;
+      } | null)
+    | ({
+        relationTo: 'suggestions';
+        value: string | Suggestion;
       } | null)
     | ({
         relationTo: 'media';
@@ -679,6 +698,18 @@ export interface MembersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suggestions_select".
+ */
+export interface SuggestionsSelect<T extends boolean = true> {
+  reviewStatus?: T;
+  message?: T;
+  name?: T;
+  contact?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

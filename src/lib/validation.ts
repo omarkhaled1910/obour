@@ -218,6 +218,14 @@ export const memberLoginSchema = z.object({
 
 export type MemberLoginParsed = z.infer<typeof memberLoginSchema>
 
+export const suggestionSchema = z.object({
+  message: requiredText('من فضلك اكتب اقتراحك'),
+  name: optionalText,
+  contact: optionalText,
+})
+
+export type SuggestionParsed = z.infer<typeof suggestionSchema>
+
 export function parseOrThrow<T extends z.ZodTypeAny>(schema: T, input: unknown): z.infer<T> {
   const result = schema.safeParse(input)
   if (!result.success) {

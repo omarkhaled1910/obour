@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   UserCircle,
+  MessageSquareHeart,
 } from "lucide-react";
 
 // شريط تنقّل جانبي قابل للفتح والإغلاق (drawer). في النسخة العربية (RTL) بيظهر
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { label: "تنفيذ المباني", href: "/construction", icon: HardHat },
   { label: "الشريك الممول", href: "/funding-partner", icon: HandCoins },
   { label: "تواصل معنا", href: "/contact", icon: Phone },
+  { label: "ساعدنا نتطور", href: "/suggestions", icon: MessageSquareHeart },
   { label: "حسابي", href: "/account", icon: UserCircle },
 ];
 
