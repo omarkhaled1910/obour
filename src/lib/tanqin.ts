@@ -15,6 +15,9 @@
 
 export const PLOT_TIERS = [209, 276, 350, 400, 450, 500] as const;
 
+// المساحة الرسمية للفدان المصري (م²) — تُستخدم لتحويل الأفدنة تلقائيًا لأمتار.
+export const SQM_PER_FEDDAN = 4200.83;
+
 export const PRICE_PER_SQM_ALLOCATED = 1400; // جنيه/م² على المساحة المخصصة (الشريحة) — غير مؤكد كسعر عام، انظر التنبيه أعلاه
 export const PRICE_PER_SQM_DIFFERENCE = 750; // جنيه/م² على الفرق بين المساحة المتبقية والشريحة
 export const DOWN_PAYMENT_RATE = 0.25; // 25% مقدم

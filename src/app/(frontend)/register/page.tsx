@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { EGYPT_GOVERNORATES } from "@/lib/governorates";
+import { SQM_PER_FEDDAN } from "@/lib/tanqin";
 import { FileInput } from "@/components/FileInput";
 import {
   submitCallbackRequest,
@@ -43,9 +44,6 @@ const MAP_HOTSPOTS: Partial<Record<Cooperative, { left: number; top: number; wid
 };
 
 type AreaUnit = "feddan" | "meter";
-
-// المساحة الرسمية للفدان المصري (م²) — تُستخدم لتحويل الأفدنة تلقائيًا لأمتار.
-const SQM_PER_FEDDAN = 4200.83;
 
 const APPLICATION_STATUSES = [
   "لم يتم تقديم الأوراق للجهاز",
@@ -447,12 +445,18 @@ export default function RegisterPage() {
                 </div>
               </button>
               <Link
-                href="/calculator"
+                href={
+                  cooperative === "الطلائع" || cooperative === "مصر الجديدة"
+                    ? "/calculator-in-kind"
+                    : "/calculator"
+                }
                 className="block border border-stone-200 bg-white rounded-xl p-5 text-right hover:border-emerald-500 hover:shadow-md transition-all"
               >
                 <div className="font-bold text-emerald-800 mb-1">تجربة محاكاة تقنين الأرض</div>
                 <div className="text-sm text-stone-500">
-                  احسب تقدير مستحقات تقنين أرضك على مساحات مختلفة قبل ما تكمل التسجيل
+                  {cooperative === "الطلائع" || cooperative === "مصر الجديدة"
+                    ? "احسب المساحة اللي هتفضل ليك بعد التقنين حسب نظام التقنين المناسب لك"
+                    : "احسب تقدير مستحقات تقنين أرضك على مساحات مختلفة قبل ما تكمل التسجيل"}
                 </div>
               </Link>
             </div>
