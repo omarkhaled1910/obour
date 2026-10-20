@@ -76,7 +76,7 @@ describe('submission server actions', () => {
 
   it('creates a licensing request and requires a power of attorney when applicable', async () => {
     const valid = await submitLicensingRequest({
-      serviceType: 'استصدار رخصة',
+      serviceType: 'استصدار رخصة مباني',
       allocationNotices: ['allocation-media'],
       plotAreaSqm: '450',
       plotNumber: '12',
@@ -105,7 +105,7 @@ describe('submission server actions', () => {
 
     create.mockClear()
     const invalid = await submitLicensingRequest({
-      serviceType: 'استصدار رخصة',
+      serviceType: 'استصدار رخصة مباني',
       plotAreaSqm: '450',
       plotNumber: '12',
       districtNumber: '3',

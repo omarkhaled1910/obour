@@ -9,7 +9,7 @@ import {
   type UploadedMedia,
 } from "@/actions/submissions";
 
-type ServiceType = "تصميم هندسي" | "استصدار رخصة";
+type ServiceType = "تصميم هندسي" | "استصدار رخصة مباني" | "استصدار رخصة حفر";
 type OwnerType = "مالك أساسي" | "بتوكيل";
 type Step = "type" | "plot" | "owner";
 
@@ -132,7 +132,7 @@ export default function LicensingPage() {
             مدن الجيل الرابع الذكية
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">رسومات هندسية وتراخيص</h1>
-          <p className="text-emerald-200">اطلب تصميم هندسي أو استصدار رخصة بناء لقطعتك</p>
+          <p className="text-emerald-200">اطلب تصميم هندسي أو استصدار رخصة مباني أو رخصة حفر لقطعتك</p>
         </div>
       </div>
 
@@ -143,8 +143,10 @@ export default function LicensingPage() {
           <div>
             <h2 className="font-bold text-stone-900 mb-1">إيه الخدمة اللي محتاجها؟</h2>
             <p className="text-sm text-stone-600 mb-5">اختر نوع الطلب</p>
-            <div className="grid grid-cols-2 gap-4">
-              {(["تصميم هندسي", "استصدار رخصة"] as ServiceType[]).map((t) => (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {(
+                ["تصميم هندسي", "استصدار رخصة مباني", "استصدار رخصة حفر"] as ServiceType[]
+              ).map((t) => (
                 <button
                   key={t}
                   onClick={() => pickServiceType(t)}

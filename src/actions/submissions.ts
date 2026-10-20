@@ -73,7 +73,7 @@ export type SuggestionInput = {
 }
 
 export type LicensingRequestInput = {
-  serviceType: 'تصميم هندسي' | 'استصدار رخصة'
+  serviceType: 'تصميم هندسي' | 'استصدار رخصة مباني' | 'استصدار رخصة حفر'
   allocationNotices?: string[]
   plotAreaSqm: string
   plotNumber: string

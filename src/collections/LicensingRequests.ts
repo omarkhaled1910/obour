@@ -38,7 +38,7 @@ export const LicensingRequests: CollectionConfig = {
       label: 'نوع الخدمة',
       type: 'select',
       required: true,
-      options: ['تصميم هندسي', 'استصدار رخصة'],
+      options: ['تصميم هندسي', 'استصدار رخصة مباني', 'استصدار رخصة حفر'],
     },
     {
       type: 'row',

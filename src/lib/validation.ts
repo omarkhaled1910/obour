@@ -123,7 +123,10 @@ export type CallbackRequestParsed = z.infer<typeof callbackRequestSchema>
 
 export const licensingRequestSchema = z
   .object({
-    serviceType: z.enum(['تصميم هندسي', 'استصدار رخصة'], 'من فضلك أكمل كل الحقول المطلوبة'),
+    serviceType: z.enum(
+      ['تصميم هندسي', 'استصدار رخصة مباني', 'استصدار رخصة حفر'],
+      'من فضلك أكمل كل الحقول المطلوبة',
+    ),
     allocationNotices: mediaIdsField,
     plotAreaSqm: positiveNumberString('مساحة القطعة'),
     plotNumber: requiredText('من فضلك أكمل كل الحقول المطلوبة'),
